@@ -1,0 +1,21 @@
+{% extends 'index.html' %}
+{% block title %}Search{% endblock %}
+{% block content %}
+<form action="sendText" method="post" enctype="multipart/form-data">
+    {% csrf_token %}
+    <input name="text" class="search-input" type="text" placeholder={{input_text}}><br><br>
+    <input type="submit" value="Submit" >
+</form>
+{%if order.id%}
+<div class="card">
+    <img src="{{order.src_road}}" class="image">
+    <p class="title">{{ order.htitle }}</p>
+    <p class="short-description">{{ order.title }}</p>
+    <div class="down">
+        <a href="{% url 'order_url' order.id %}" class="card-button">Подробнее</a>
+    </div>
+</div>
+{%else%}
+<h1>Ничего не найдено</h1>
+{% endif %}
+{% endblock %}

@@ -1,0 +1,31 @@
+{% extends 'index.html' %}
+
+{% block title %}Список заказов{% endblock %}
+
+{% block content %}
+<form action="sendText" method="post" enctype="multipart/form-data">
+    {% csrf_token %}
+    <input name="text" type="text" class='search.input'><br><br>
+    <input type="submit" value="Submit" >
+</form>
+<div class="search-container">
+    <input type="text" placeholder="Я ищу...." class="search-input">
+    <button type="submit" class="search-button">
+        <img src="http://localhost:9000/miniolab1/image/search.png" alt="Поиск" class="search-img">
+    </button>
+</div>
+<div class="container">
+    {% for order in orders %}
+    <div class="card">
+        <img src="{{order.src_road}}" class="image">
+        <p class="title">{{ order.htitle }}</p>
+        <p class="short-description">{{ order.title }}</p>
+        <div class="down">
+            <a href="{% url 'order_url' order.id %}" class="card-button">Подробнее</a>
+        </div>
+    </div>
+    {% empty %}
+    <h1 class="empty_text"> Ничего не найдено </h1>
+    {% endfor %}
+</div>
+{% endblock %}

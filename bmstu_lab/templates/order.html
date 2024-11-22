@@ -1,0 +1,12 @@
+{% extends 'index.html' %}
+
+{% block title %}Заказ №{{ id }}{% endblock %}
+
+{% block content %}
+    <img src={{src_road}}></img>
+    {% with key=id %}
+    <h1>{{ ht }}</h1>
+    {% endwith %}
+    <p>{{ description }}</p>
+    <div>Информация о заказе №{{ id }}</div>
+{% endblock %}
