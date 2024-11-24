@@ -3,10 +3,12 @@
 {% block title %}Заказ №{{ id }}{% endblock %}
 
 {% block content %}
-    <img src={{src_road}}></img>
+    <div class="card_str">
+    <div class="foto">
+    <img src={{src_road}} class="img_card"></img>:</div>
     {% with key=id %}
-    <h1>{{ ht }}</h1>
+    <div class="htitle"><h1>{{ ht }}</h1></div>
     {% endwith %}
-    <p>{{ description }}</p>
-    <div>Информация о заказе №{{ id }}</div>
+    <div class="descrip"><p>{{ description }}</p></div>
+    </div>
 {% endblock %}

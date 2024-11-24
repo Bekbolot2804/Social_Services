@@ -3,16 +3,19 @@
 {% block title %}Список заказов{% endblock %}
 
 {% block content %}
-<form action="sendText" method="post" enctype="multipart/form-data">
+<div class="menu">
+    <div>
+<form action="sendText" method="post" enctype="multipart/form-data" class="search-container">
     {% csrf_token %}
-    <input name="text" type="text" class='search.input'><br><br>
-    <input type="submit" value="Submit" >
-</form>
-<div class="search-container">
-    <input type="text" placeholder="Я ищу...." class="search-input">
+    <input name="text" value="{{input_text}}" type="text" class="search-input" placeholder="Я ищу...">
     <button type="submit" class="search-button">
-        <img src="http://localhost:9000/miniolab1/image/search.png" alt="Поиск" class="search-img">
+        <img src="http://localhost:9000/miniolab1/image/search.png" class="img_svg" alt="Search">
     </button>
+</form> </div>
+<div>
+<a href="appl">
+    <img src="http://localhost:9000/miniolab1/image/help.png">
+</a> </div>
 </div>
 <div class="container">
     {% for order in orders %}
