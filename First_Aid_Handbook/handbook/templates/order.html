@@ -1,0 +1,16 @@
+{% extends 'index.html' %}
+
+{% block title %}Заказ №{{ id }}{% endblock %}
+
+{% block content %}
+    <div class="card_str">
+    {% with key=id %}
+    <div class="htitle"><h1>{{ ht }}</h1></div>
+    {% endwith %}
+    <div class="order_rows">
+    <div class="foto">
+    <img src={{src_road}} class="card_appl_imgf"></img></div>
+    <div class="descrip"><p>{{ description }}</p></div>
+    </div>
+    </div>
+{% endblock %}

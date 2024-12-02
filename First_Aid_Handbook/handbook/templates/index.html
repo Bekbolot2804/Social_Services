@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    {% load static %}
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}{% endblock %}</title>
+    <link rel="stylesheet" type="text/css" href="{% static 'css/style.css' %}">
+</head>
+<body>
+    <div class="space">
+        <div class="header">
+            <div class="bg_color_head">
+                <div class="glav">
+                    <img class="im_glav" src="http://localhost:9000/miniolab1/image/main.png" alt="">
+                    <a href="{% url 'main' %}" title="Главное" class="glavnoe">
+                            Справочник по медицине
+                    </a>
+                </div>
+            </div>
+        </div>
+        {% block content %}{% endblock %}
+    </div>
+</body>
+</html>
