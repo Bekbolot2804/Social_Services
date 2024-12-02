@@ -151,18 +151,5 @@ def GetOrder(request, id):
     return render(request, 'order.html', order)
 
 
-def sendText(request):
-    input_text = request.POST['text'].lower()
-    matched_cards = []
-    for current_text in data['orders']:
-        if input_text in current_text['htitle'].lower():
-            matched_cards.append(current_text)
-    context = {
-        'input_text': input_text,
-        'orders': matched_cards
-    }
-    return render(request, 'orders.html', context)
-
-
 def GetAppl(request):
     return render(request, 'application.html', data)
