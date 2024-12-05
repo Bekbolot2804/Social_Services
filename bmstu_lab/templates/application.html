@@ -1,0 +1,31 @@
+{% extends 'index.html' %}
+{% block title %} application {% endblock %}
+{% block content %}
+
+
+
+<div class = "appl">
+    <select id="disaster-select">
+        <option value="" disabled selected>Выберите катастрофу</option>
+        <option value="auto-accident">Автомобильная авария</option>
+        <option value="fire">Пожар</option>
+        <option value="natural-disaster">Стихийное бедствие</option>
+        <option value="industrial-accident">Техногенная авария</option>
+        <option value="transportation-catastrophe">Железнодорожная или авиационная катастрофа</option>
+    </select>
+<div class="container_appl">
+    {%for order in orders%}
+    <div class="card_appl"> 
+        <div class="card_appl_img">
+            <img src="{{order.src_road}}" class="card_appl_img">
+        </div>
+        <div class="card_appl_ht">
+            <h1>{{order.htitle}}</h1>
+        </div>
+        <div class="card_appl_title">
+            <p>{{order.title}}</p>
+        </div>
+    </div>
+    {% endfor %}
+</div>
+{% endblock %}
