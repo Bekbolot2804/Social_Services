@@ -5,7 +5,7 @@
 
 
 <div class = "appl">
-    <div class="text_order"><div>
+    <div class="text_service"><div>
     <h1>
         Название поражения
     </h1>
@@ -13,24 +13,32 @@
     <div>
     <form action="" method="get" enctype="search_l/form-data" class="search-container">
         {% csrf_token %}
-        <input name="text" value="{{get_orders}}" type="text" class="name_orders" placeholder="">
+        <input name="text" value="{{defeats.name}}" type="text" class="name_services" placeholder="">
     </form>
     </div>
     </div>
 <div class="container_appl">
-    {%for order in matched_cards%}
+    {%for service in services%}
     <div class="card_appl"> 
         <div class="card_appl_img">
-            <img src="{{order.src_road}}" class="card_appl_imgf">
+            <img src="{{service.src_road}}" class="card_appl_imgf">
         </div>
         <div class="card_appl_ht">
-            <h1>{{order.htitle}}</h1>
+            <h1>{{service.htitle}}</h1>
         </div>
         <div class="card_appl_title">
-            <p>{{order.title}}</p>
+            <p>{{service.title}}</p>
+        </div>
+        <div class="card_appl_time">
+            <p>Длительность:</p>
+            <input name="text" value="{{service.time}}" type="text" class="comment" placeholder="">
+        </div>
+        <div class="card_appl_comment">
+            <p>Комментарий:</p>
+            <input name="text" value="{{service.comment}}" type="text" class="comment" placeholder="">
         </div>
         <div class="card_appl_but">
-            <a href="{% url 'order_url' order.id %}" class="card-button">Подробнее</a>
+            <a href="{% url 'service_url' service.id %}" class="card-button">Подробнее</a>
         </div>
     </div>
     {% endfor %}

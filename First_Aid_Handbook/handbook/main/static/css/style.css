@@ -166,12 +166,12 @@ a:hover {
 }
 .card_appl{
     display: grid;
-    width: 50%;
+    width: 70%;
     align-items: center;
     justify-items: center;
 }
 .card_appl_img{
-    grid-row: 1/4;
+    grid-row: 1/6;
     grid-column: 1/2;
 }
 .card_appl_imgf{
@@ -189,15 +189,29 @@ a:hover {
     grid-column: 2/3;
 }
 .card_appl_but{
+    grid-row: 5/6;
+    grid-column: 2/3;
+}
+.card_appl_time{
     grid-row: 3/4;
     grid-column: 2/3;
+    display:flex;
+    align-items: center;
+    gap: 15px;
+}
+.card_appl_comment{
+    grid-row: 4/5;
+    grid-column: 2/3;
+    display: flex;
+    gap: 15px;
+    align-items: center;
 }
 .card_str{
     width: 80%;
     justify-self: center;
     text-align: center;
 }
-.order_rows{
+.service_rows{
     display: flex;
 }
 .htitle{
@@ -210,12 +224,24 @@ a:hover {
     border-color: green;
     border-radius: 10px;
 }
-.name_orders{
+.name_services{
     border-radius: 10px;
     border: solid 1px;
     height: 30px;
     width: 400px;
 }
-.text_order{
+.text_service{
     display: flex;
+    gap: 15px;
+    justify-content: center;
+    align-items: center;
+    margin-top: 15px;
+    margin-bottom: 15px;
+}
+.comment{
+    border-radius: 10px;
+    border: solid 1px;
+    height: 30px;
+    width: 250px;
+    text-align: center;
 }

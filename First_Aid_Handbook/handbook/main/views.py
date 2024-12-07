@@ -1,7 +1,7 @@
 from django.shortcuts import render
 from datetime import date
 
-data = {'orders': [
+data = {'services': [
             { 'id': 1, 
              'src_road': 'http://localhost:9000/miniolab1/image/1.png',
              'htitle': 'Как делать сердечно-легочную реанимацию', 
@@ -262,14 +262,14 @@ data = {'orders': [
 
 Закончив, проверьте кровообращение. Это можно сделать, нажав ногтем на руку на пять секунд, пока она не побледнеет. Если цвет не вернется в течение двух секунд, повязка слишком тугая, поэтому вам придется ослабить ее и наложить снова. Продолжайте проверять кровообращение каждые 10 минут.'''}
 ],
-'orders1': [
+'defeats': [
     {
         'id': 1,
         'name': 'Перелом конечностей',
     },
     {
         'id': 2,
-        'name': 'Сильные кровотечения',
+        'name': 'Кровотечения',
     },
     {
         'id': 3,
@@ -278,44 +278,87 @@ data = {'orders': [
 ],
 'relations': [
   {
-      'id_orders1': 1,
-      'id_orders': [1, 2, 12],
+      'id_defeats': 1,
+      'id_services': [
+          {
+            'id': 1,
+            'time': 23,
+            'comment': 'Выполнять острожно'
+          },
+          {
+            'id': 2,
+            'time': 13,
+            'comment': 'Выполнять острожно'
+          },
+          {
+            'id': 12,
+            'time': 29,
+            'comment': 'Выполнять острожно'
+          }
+      ],
   }
 ]
 }
 
-def GetOrders(request):
+def GetServices(request):
     input_text = request.GET.get('text', "").lower()
     matched_cards = []
     if input_text:
-        for current_text in data['orders']:
+        for current_text in data['services']:
             if input_text in current_text['htitle'].lower():
                 matched_cards.append(current_text)
     else:
-        matched_cards = data['orders']
+        matched_cards = data['services']
     context = {
             'input_text': input_text,
-            'orders': matched_cards,
-            'orders1': data['orders1'],
+            'services': matched_cards,
+            'defeats': data['defeats'],
             'relations': data['relations']
         }
-    return render(request, 'orders.html', context)
+    return render(request, 'services.html', context)
 
 
-def GetOrder(request, id):
-    order = None
-    for current_order in data['orders']:
-        if current_order['id'] == id:
-            order=current_order
+def GetService(request, id):
+    service = None
+    for current_service in data['services']:
+        if current_service['id'] == id:
+            service=current_service
             break
-    return render(request, 'order.html', order)
-
-def GetNumOrders(request):
-    match_cards = data['orders1']
-    t = len(match_cards.id_orders)
-    return t
+    return render(request, 'service.html', service)
 
 def GetAppl(request):
-    matched_cards = []
-    
-    return render(request, 'application.html', data)
+    relations = data['relations']
+    services = data['services']
+    defeats = data['defeats']
+
+    # Список для хранения объединенных данных
+    matched_services = []
+    selected_defeats = None
+
+    # Проходим по всем relations
+    for relation in relations:
+        # Ищем категорию defeats
+        selected_defeats = next((o for o in defeats if o['id'] == relation['id_defeats']), None)
+
+        if selected_defeats:
+            # Ищем и объединяем связанные заказы
+            for id_service_data in relation['id_services']:
+                service_id = id_service_data['id']
+                matched_service = next((o for o in services if o['id'] == service_id), None)
+
+                if matched_service:
+                    # Добавляем дополнительные поля time и comment
+                    matched_service = matched_service.copy()  # Создаем копию объекта, чтобы не изменять оригинал
+                    matched_service['time'] = id_service_data['time']
+                    matched_service['comment'] = id_service_data['comment']
+
+                    # Добавляем в список
+                    matched_services.append(matched_service)
+
+    # Формируем context для шаблона
+    context = {
+        'defeats': selected_defeats,  # Категория (например, 'Перелом конечностей')
+        'services': matched_services,    # Объединенные данные заказов
+    }
+
+    return render(request, 'application.html', context)
