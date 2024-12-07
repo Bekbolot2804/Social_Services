@@ -5,16 +5,20 @@
 
 
 <div class = "appl">
-    <select id="disaster-select">
-        <option value="" disabled selected>Выберите катастрофу</option>
-        <option value="auto-accident">Автомобильная авария</option>
-        <option value="fire">Пожар</option>
-        <option value="natural-disaster">Стихийное бедствие</option>
-        <option value="industrial-accident">Техногенная авария</option>
-        <option value="transportation-catastrophe">Железнодорожная или авиационная катастрофа</option>
-    </select>
+    <div class="text_order"><div>
+    <h1>
+        Название поражения
+    </h1>
+</div>
+    <div>
+    <form action="" method="get" enctype="search_l/form-data" class="search-container">
+        {% csrf_token %}
+        <input name="text" value="{{get_orders}}" type="text" class="name_orders" placeholder="">
+    </form>
+    </div>
+    </div>
 <div class="container_appl">
-    {%for order in orders%}
+    {%for order in matched_cards%}
     <div class="card_appl"> 
         <div class="card_appl_img">
             <img src="{{order.src_road}}" class="card_appl_imgf">
@@ -30,5 +34,6 @@
         </div>
     </div>
     {% endfor %}
+</div>
 </div>
 {% endblock %}

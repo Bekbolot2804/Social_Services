@@ -5,14 +5,18 @@
 {% block content %}
 <div class="menu">
     <div class="search">
-<form action="" method="post" enctype="search_l/form-data" class="search-container">
+<form action="" method="get" enctype="search_l/form-data" class="search-container">
     {% csrf_token %}
     <input name="text" value="{{input_text}}" type="text" class="search-input" placeholder="Я ищу...">
-</form> </div>
+</form>
+</div>
 <div>
-<a href="appl">
-    <img src="http://localhost:9000/miniolab1/image/help.png">
-</a> </div>
+    <a href="appl">
+        <img class="{%for relation in relations%}
+        {% if relation.id_orders%}TrueFalseNum{% endif %}
+        {%endfor%}" src="http://localhost:9000/miniolab1/image/help.png">
+    </a>
+    </div>
 </div>
 <div class="container">
     {% for order in orders %}
