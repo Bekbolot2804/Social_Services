@@ -211,7 +211,7 @@ a:hover {
     justify-self: center;
     text-align: center;
 }
-.service_rows{
+.help_rows{
     display: flex;
 }
 .htitle{
@@ -224,13 +224,13 @@ a:hover {
     border-color: green;
     border-radius: 10px;
 }
-.name_services{
+.name_helps{
     border-radius: 10px;
     border: solid 1px;
     height: 30px;
     width: 400px;
 }
-.text_service{
+.text_help{
     display: flex;
     gap: 15px;
     justify-content: center;

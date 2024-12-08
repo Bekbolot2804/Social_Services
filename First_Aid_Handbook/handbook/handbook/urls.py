@@ -22,7 +22,7 @@ from main import views
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('', views.GetServices, name = 'main'),
-    path('help/<int:id>/', views.GetService, name='service_url'),
+    path('', views.GetHelps, name = 'main'),
+    path('help/<int:id>/', views.GetHelp, name='help_url'),
     path('appl', views.GetAppl, name='appl')
 ]

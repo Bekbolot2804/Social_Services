@@ -13,18 +13,18 @@
 <div>
     <a href="appl">
         <img class="{%for relation in relations%}
-        {% if relation.id_services%}TrueFalseNum{% endif %}
+        {% if relation.id_helps%}TrueFalseNum{% endif %}
         {%endfor%}" src="http://localhost:9000/miniolab1/image/help.png">
     </a>
     </div>
 </div>
 <div class="container">
-    {% for service in services %}
+    {% for help in helps %}
     <div class="card">
-        <img src="{{service.src_road}}" class="image">
-        <p class="title">{{ service.htitle }}</p>
+        <img src="{{help.img}}" class="image">
+        <p class="title">{{ help.name }}</p>
         <div class="down">
-            <a href="{% url 'service_url' service.id %}" class="card-button">Подробнее</a>
+            <a href="{% url 'help_url' help.id %}" class="card-button">Подробнее</a>
         </div>
     </div>
     {% empty %}
