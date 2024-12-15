@@ -22,7 +22,9 @@ from main import views
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('', views.GetHelps, name = 'main'),
-    path('help/<int:id>/', views.GetHelp, name='help_url'),
-    path('appl', views.GetAppl, name='appl')
+    path('', views.get_helps, name = 'main'),
+    path('help/<int:id>/', views.get_help, name='help_url'),
+    path('appl', views.get_appl, name='appl'),
+    path('add_help_to_lesion', views.add_help_to_lesion, name='add_help_to_lesion'),
+    path('remove_draft_lesion', views.remove_draft_lesion, name='remove_draft_lesion'),
 ]

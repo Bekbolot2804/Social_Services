@@ -18,10 +18,15 @@
     </div>
     </div>
 <div class="container_appl">
+    <form action="{% url 'remove_draft_lesion' %}" method="post">
+        {%csrf_token %}
+        <input type="hidden" name="lesion_id" value="{{lesion_id}}">
+        <button class="" >Удалить</button>
+    </form>
     {%for help in helps%}
     <div class="card_appl"> 
         <div class="card_appl_img">
-            <img src="{{help.img}}" class="card_appl_imgf">
+            <img src="{{help.image}}" class="card_appl_imgf">
         </div>
         <div class="card_appl_ht">
             <h1>{{help.name}}</h1>

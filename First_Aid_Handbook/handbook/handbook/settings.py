@@ -40,6 +40,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'handbook',
 ]
 
 MIDDLEWARE = [
@@ -82,10 +83,19 @@ WSGI_APPLICATION = 'handbook.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+        'ENGINE': 'django.db.backends.postgresql',
+        'NAME': 'mydb', # Имя вашей БД. Если вы создали черезе psql или IDE свою базу и хотите использовать его - пропишите его имя здесь
+        'USER': 'root',
+        'PASSWORD': 'mydbpass',
+        'HOST': '127.0.0.1',
+        'PORT': 5432, # Стандартный порт PostgreSQL
+        'OPTIONS': {
+            'client_encoding': 'UTF8',
+        },
     }
 }
+
+
 
 
 # Password validation

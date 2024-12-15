@@ -5,30 +5,36 @@
 {% block content %}
 <div class="menu">
     <div class="search">
-<form action="" method="get" enctype="search_l/form-data" class="search-container">
-    {% csrf_token %}
-    <input name="text" value="{{input_text}}" type="text" class="search-input" placeholder="Я ищу...">
-</form>
-</div>
-<div>
-    <a href="appl">
-        <img class="{%for relation in relations%}
-        {% if relation.id_helps%}TrueFalseNum{% endif %}
-        {%endfor%}" src="http://localhost:9000/miniolab1/image/help.png">
-    </a>
+        <form action="" method="get" class="search-container">
+            {% csrf_token %}
+            <input name="text" value="{{ input_text }}" type="text" class="search-input" placeholder="Я ищу...">
+        </form>
+    </div>
+    <div>
+        <a href="{% url 'appl' %}">
+            <img class="{% for relation in relations %}{% if relation.help.id %}TrueFalseNum 
+            {% endif %}{% endfor %}" 
+                 src="http://localhost:9000/miniolab1/image/help.png" alt="Help Icon">
+        </a>
     </div>
 </div>
+
 <div class="container">
     {% for help in helps %}
-    <div class="card">
-        <img src="{{help.img}}" class="image">
-        <p class="title">{{ help.name }}</p>
-        <div class="down">
-            <a href="{% url 'help_url' help.id %}" class="card-button">Подробнее</a>
+        <div class="card">
+            <img src="{{ help.image }}" alt="{{ help.image }}" class="image">
+            <p class="title">{{ help.name }}</p>
+            <div class="down">
+                <a href="{% url 'help_url' help.id %}" class="card-button">Подробнее</a>
+                <form action="{% url 'add_help_to_lesion' %}" method="post">
+                    {% csrf_token %}
+                    <input type="hidden" name="addingHelp" value="{{ help.id }}">
+                    <button type="submit" class="button cardButton oswald">Добавить</button>
+                </form>                
+            </div>
         </div>
-    </div>
     {% empty %}
-    <h1 class="empty_text"> Ничего не найдено </h1>
+        <h1 class="empty_text">Ничего не найдено</h1>
     {% endfor %}
 </div>
 {% endblock %}
