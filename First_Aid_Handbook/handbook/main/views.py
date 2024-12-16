@@ -23,17 +23,19 @@ def get_helps(request):
     # Получаем все связи с 'HelpLesion', связанные с текущей заявкой
     relations = HelpLesion.objects.select_related('help', 'lesion').filter(lesion=lesion)
     input_text = request.GET.get('text', "").lower()
-
+    # Считаем количество связей
+    count = relations.count()
     if input_text:
         matched_helps = Help.objects.filter(name__icontains=input_text)
     else:
         matched_helps = Help.objects.all()
-
+    
     return render(request, 'helps.html', {
         'input_text': input_text,
         'helps': matched_helps,
         'lesions': [lesion],  # Передаём текущую заявку
         'relations': relations,
+        'count': count,
     })
 
 def get_help(request, id):
@@ -122,3 +124,5 @@ def get_appl(request):
         'helps': matched_helps,
     }
     return render(request, 'application.html', context)
+
+

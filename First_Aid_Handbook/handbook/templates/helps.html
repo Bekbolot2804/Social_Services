@@ -10,12 +10,13 @@
             <input name="text" value="{{ input_text }}" type="text" class="search-input" placeholder="Я ищу...">
         </form>
     </div>
-    <div>
+    <div class="count_appl">
         <a href="{% url 'appl' %}">
             <img class="{% for relation in relations %}{% if relation.help.id %}TrueFalseNum 
             {% endif %}{% endfor %}" 
                  src="http://localhost:9000/miniolab1/image/help.png" alt="Help Icon">
         </a>
+        <h1>{{count}}</h1>
     </div>
 </div>
 

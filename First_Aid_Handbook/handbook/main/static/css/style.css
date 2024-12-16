@@ -245,3 +245,7 @@ a:hover {
     width: 250px;
     text-align: center;
 }
+.count_appl{
+    display: flex;
+    align-items: end;
+}
