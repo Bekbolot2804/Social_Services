@@ -307,11 +307,13 @@ def GetHelps(request):
                 matched_cards.append(current_text)
     else:
         matched_cards = data['helps']
+    count = sum(len(relation['id_helps']) for relation in data['relations'])
     context = {
             'input_text': input_text,
             'helps': matched_cards,
             'lesions': data['lesions'],
-            'relations': data['relations']
+            'relations': data['relations'],
+            'count': count,
         }
     return render(request, 'helps.html', context)
 
