@@ -1,8 +1,4 @@
 from django.contrib import admin
-from .models import Help, Lesion, HelpLesion
+from .models import Help
 admin.site.register(Help)
-admin.site.register(Lesion)
-admin.site.register(HelpLesion)
 # Register your models here.
-
-
