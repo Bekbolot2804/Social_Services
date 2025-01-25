@@ -4,6 +4,7 @@ from rest_framework import status
 from django.db import IntegrityError
 from django.shortcuts import get_object_or_404
 from django.contrib.auth import authenticate
+from main.minio import add_pic
 from .models import Help, Lesion, HelpLesion
 from .serializers import HelpSerializer, LesionSerializer, HelpLesionSerializer
 
@@ -23,6 +24,10 @@ class HelpView(APIView):
         if serializer.is_valid():
             try:
                 serializer.save()
+                pic=request.FILES.get("pic")
+                pic_result=add_pic(help, pic)
+                if 'error' in pic_result.data:
+                    return pic_result
                 return Response(serializer.data, status=status.HTTP_201_CREATED)
             except IntegrityError as e:
                 return Response({"error": "Integrity Error: Duplicate or invalid data"}, status=status.HTTP_400_BAD_REQUEST)
@@ -31,6 +36,10 @@ class HelpView(APIView):
     def put(self, request, id):
         instance = get_object_or_404(Help, id=id)
         serializer = HelpSerializer(instance, data=request.data, partial=True)
+        if 'pic' in serializer.initial_data:
+            pic_result = add_pic(help, serializer.initial_data['pic'])
+            if 'error' in pic_result.data:
+                return pic_result
         if serializer.is_valid():
             serializer.save()
             return Response(serializer.data, status=status.HTTP_200_OK)
