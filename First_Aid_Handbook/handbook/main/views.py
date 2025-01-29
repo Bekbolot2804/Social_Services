@@ -8,7 +8,6 @@ from main.minio import add_pic
 from .models import Help, Lesion, HelpLesion
 from .serializers import HelpSerializer, LesionSerializer, HelpLesionSerializer
 
-
 class HelpView(APIView):
     def get(self, request, id=None):
         if id:
@@ -23,11 +22,16 @@ class HelpView(APIView):
         serializer = HelpSerializer(data=request.data)
         if serializer.is_valid():
             try:
-                serializer.save()
-                pic=request.FILES.get("pic")
-                pic_result=add_pic(help, pic)
-                if 'error' in pic_result.data:
-                    return pic_result
+                # Сохраняем объект Help
+                help_instance = serializer.save()
+
+                # Обрабатываем загруженное изображение
+                pic = request.FILES.get("pic")
+                if pic:
+                    pic_result = add_pic(help_instance, pic)  # Передаем правильный объект Help
+                    if 'error' in pic_result:
+                        return Response(pic_result, status=status.HTTP_400_BAD_REQUEST)
+                
                 return Response(serializer.data, status=status.HTTP_201_CREATED)
             except IntegrityError as e:
                 return Response({"error": "Integrity Error: Duplicate or invalid data"}, status=status.HTTP_400_BAD_REQUEST)
