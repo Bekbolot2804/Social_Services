@@ -153,6 +153,8 @@ REST_FRAMEWORK = {
     ],
     'DEFAULT_PARSER_CLASSES': [
         'rest_framework.parsers.JSONParser',
+        'rest_framework.parsers.MultiPartParser',  # Добавлено
+        'rest_framework.parsers.FormParser',       # Добавлено
     ],
     'DEFAULT_AUTHENTICATION_CLASSES': [
         'rest_framework.authentication.SessionAuthentication',
@@ -193,3 +195,13 @@ LOGGING = {
         },
     },
 }
+MEDIA_URL = '/media/'
+MEDIA_ROOT = BASE_DIR / 'media'
+
+# Добавьте маршруты для медиа файлов в urls.py
+from django.conf import settings
+from django.conf.urls.static import static
+
+urlpatterns = [
+    # ... ваши маршруты ...
+] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

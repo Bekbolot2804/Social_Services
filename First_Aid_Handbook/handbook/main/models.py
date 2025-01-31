@@ -4,7 +4,7 @@ from django.contrib.auth.models import User
 # Исправленные и обновленные модели "Помощь"
 class Help(models.Model):
     name = models.CharField(max_length=50, verbose_name="Название")
-    image = models.URLField(max_length=200, verbose_name="URL изображения")  # Исправлено на URLField для валидации
+    image = models.ImageField(upload_to='images/', verbose_name="Изображение") 
     title = models.CharField(max_length=120, verbose_name="Заголовок")
     description = models.TextField(verbose_name="Описание")  # Исправлено на TextField для длинного текста
 

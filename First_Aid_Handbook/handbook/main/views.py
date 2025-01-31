@@ -1,14 +1,20 @@
 from rest_framework.views import APIView
+from rest_framework.parsers import MultiPartParser, FormParser
 from rest_framework.response import Response
 from rest_framework import status
 from django.db import IntegrityError
 from django.shortcuts import get_object_or_404
 from django.contrib.auth import authenticate
 from main.minio import add_pic
+import logging
 from .models import Help, Lesion, HelpLesion
 from .serializers import HelpSerializer, LesionSerializer, HelpLesionSerializer
 
+logger = logging.getLogger(__name__)
+
 class HelpView(APIView):
+    parser_classes = (MultiPartParser, FormParser)
+
     def get(self, request, id=None):
         if id:
             instance = get_object_or_404(Help, id=id)
@@ -19,18 +25,20 @@ class HelpView(APIView):
         return Response(serializer.data, status=status.HTTP_200_OK)
 
     def post(self, request):
+        logger.debug(f"Received data: {request.data}")
         serializer = HelpSerializer(data=request.data)
         if serializer.is_valid():
             try:
-                # Сохраняем объект Help
                 help_instance = serializer.save()
-
-                # Обрабатываем загруженное изображение
-                pic = request.FILES.get("pic")
+                pic = request.FILES.get("image")
+                logger.debug(f"Received file: {pic}")
                 if pic:
-                    pic_result = add_pic(help_instance, pic)  # Передаем правильный объект Help
+                    pic_result = add_pic(help_instance, pic)
+                    logger.debug(f"Pic result: {pic_result}")
                     if 'error' in pic_result:
                         return Response(pic_result, status=status.HTTP_400_BAD_REQUEST)
+                    help_instance.image = pic_result['message']
+                    help_instance.save()
                 
                 return Response(serializer.data, status=status.HTTP_201_CREATED)
             except IntegrityError as e:
@@ -40,10 +48,11 @@ class HelpView(APIView):
     def put(self, request, id):
         instance = get_object_or_404(Help, id=id)
         serializer = HelpSerializer(instance, data=request.data, partial=True)
-        if 'pic' in serializer.initial_data:
-            pic_result = add_pic(help, serializer.initial_data['pic'])
-            if 'error' in pic_result.data:
-                return pic_result
+        if 'image' in serializer.initial_data:
+            pic_result = add_pic(instance, serializer.initial_data['image'])
+            if 'error' in pic_result:
+                return Response(pic_result, status=status.HTTP_400_BAD_REQUEST)
+            instance.image = pic_result['message']  # Обновляем URL изображения
         if serializer.is_valid():
             serializer.save()
             return Response(serializer.data, status=status.HTTP_200_OK)
