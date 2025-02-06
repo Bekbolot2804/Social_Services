@@ -22,5 +22,9 @@ from main import views
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('helps', views.HelpAPIview.as_view()),
+    path('helps', views.HelpList.as_view()),
+    path('helps/<int:pk>', views.HelpDetail.as_view()),
+    # path('lesions', views.LesionList.as_view()),
+    # path('lesions/<int:pk>', views.LesionDetail.as_view()),
+    # path('help_lesions', views.HelpLesionList.as_view()),
 ]
