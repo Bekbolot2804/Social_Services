@@ -140,7 +140,7 @@ STATIC_URL = 'main/static/'
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
-AWS_STORAGE_BUCKET_NAME = 'logo'
+AWS_STORAGE_BUCKET_NAME = 'miniolab1'
 AWS_ACCESS_KEY_ID = 'beka'
 AWS_SECRET_ACCESS_KEY = '20042804'
 AWS_S3_ENDPOINT_URL = 'localhost:9000'
