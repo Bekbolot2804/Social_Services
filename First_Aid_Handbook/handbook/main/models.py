@@ -5,7 +5,7 @@ from django.contrib.auth.models import User
 # Модель "Помощь"
 class Help(models.Model):
     name = models.CharField(max_length=50, verbose_name="Название")
-    image = models.CharField(max_length=64, verbose_name="URL изображения")
+    image = models.CharField(max_length=255, blank=True, null=True, verbose_name="URL изображения")
     title = models.CharField(max_length=120, verbose_name="Заголовок")
     description = models.CharField(max_length=520, verbose_name="Описание")
 
