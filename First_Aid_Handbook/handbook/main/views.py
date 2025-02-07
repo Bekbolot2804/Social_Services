@@ -7,10 +7,12 @@ from django.forms.models import model_to_dict
 from .models import Help
 from .serializers import HelpSerializer
 from .minio import add_pic
+from rest_framework.parsers import MultiPartParser
 
 
 
 class HelpList(APIView):
+    parser_classes = [MultiPartParser]
     model_class = Help
     serializer_class = HelpSerializer
     def get(self, request):
@@ -18,15 +20,25 @@ class HelpList(APIView):
         serializer=self.serializer_class(helps, many=True)
         return Response(serializer.data)
     def post(self, request, format=None):
-        serializer = self.serializer_class(data=request.data)
+        # Создаем сериализатор с данными из запроса
+        serializer = HelpSerializer(data=request.data)
+        
         if serializer.is_valid():
-            help = serializer.save()
+            # Сохраняем объект без изображения
+            help_instance = serializer.save()
+
+            # Получаем файл из запроса
             pic = request.FILES.get("pic")
-            pic_result = add_pic(help, pic)
-            if 'error' in pic_result.data:
-                return Response({"errors": "Че ошибка?"})
-                # return pic_result
-            return Response(serializer.data, status=status.HTTP_201_CREATED)
+            if pic:
+                # Загружаем изображение в MinIO и обновляем объект
+                result = add_pic(help_instance, pic)
+                if 'error' in result:
+                    return Response({"errors": "Ошибка при загрузке изображения"}, status=status.HTTP_400_BAD_REQUEST)
+
+            # Возвращаем обновленные данные
+            response_serializer = HelpSerializer(help_instance)
+            return Response(response_serializer.data, status=status.HTTP_201_CREATED)
+
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
     
     # def post(self, request):
