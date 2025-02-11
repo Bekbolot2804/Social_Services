@@ -8,7 +8,7 @@ class Help(models.Model):
     image = models.CharField(max_length=255, blank=True, null=True, verbose_name="URL изображения")
     title = models.CharField(max_length=120, verbose_name="Заголовок")
     description = models.CharField(max_length=520, verbose_name="Описание")
-    price = models.DecimalField(max_digits=5, verbose_name="Цена")
+    price = models.DecimalField(max_digits=5, decimal_places=2, verbose_name="Цена")
 
     def __str__(self):
         return self.name
@@ -16,7 +16,7 @@ class Help(models.Model):
 # Модель "Поражение"
 class Lesion(models.Model):
     name = models.CharField(max_length=50, verbose_name="Название поражения")
-    client = models.ForeignKey(User, on_delete=models.DO_NOTHING, null=True, related_name='client_lesions', verbose_name="Клиент")
+    client = models.ForeignKey(User, on_delete=models.DO_NOTHING, null=True, blank=True, related_name='client_lesions', verbose_name="Клиент")
     helper = models.ForeignKey(User, on_delete=models.DO_NOTHING, null=True, related_name='helper_lesions', verbose_name="Помощник")
     status = models.CharField(max_length=20, verbose_name="Статус")
     date_start = models.DateTimeField(null=True, blank=True, verbose_name="Дата начала")

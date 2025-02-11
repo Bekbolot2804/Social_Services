@@ -3,7 +3,8 @@ from django.utils import timezone
 from django.db import connection
 from .models import Help, Lesion, HelpLesion
 from django.db.models import Q
-
+from django.contrib.auth.decorators import login_required
+from django.http import HttpResponseForbidden
 
 def get_helps(request):
     # Получаем заявку с фиксированным id=1
@@ -13,7 +14,7 @@ def get_helps(request):
     if not lesion:
         lesion = Lesion.objects.create(
             id=1,  # фиксированный id
-            client=request.user,
+            client=request.user if request.user.is_authenticated else None,  # Анонимный пользователь
             name="Основная заявка",
             status='draft',
             date_applied=timezone.now()
@@ -72,18 +73,25 @@ def add_help_to_lesion(request):
     return redirect('main')
 
 
+@login_required
 def remove_draft_lesion(request):
     if request.method == 'POST':
         print(f"POST данные: {request.POST}")
         remove_lesion = request.POST.get('lesion_id')
         print(f"Переданный ID: {remove_lesion}")
 
-        # Обновляем статус заявки с фиксированным id=1
-        with connection.cursor() as cursor:
-            cursor.execute(
-                'UPDATE main_lesion SET status = CASE WHEN status = %s THEN %s ELSE %s END WHERE id = %s',
-                ['draft', 'deleted', 'draft', 1]
-            )
+        # Получаем заявку
+        lesion = Lesion.objects.filter(id=1).first()
+        if not lesion:
+            return HttpResponse("Заявка не найдена", status=404)
+
+        # Если пользователь не авторизован, возвращаем ошибку
+        if not request.user.is_authenticated:
+            return HttpResponseForbidden("Для изменения статуса необходимо авторизоваться")
+
+        # Обновляем статус заявки
+        lesion.status = 'created' if lesion.status == 'draft' else 'deleted'
+        lesion.save()
         print("Статус заявки переключён")
 
     return redirect('main')

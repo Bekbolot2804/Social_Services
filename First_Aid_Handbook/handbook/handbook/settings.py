@@ -94,7 +94,7 @@ DATABASES = {
         },
     }
 }
-
+LOGIN_URL = '/admin/login/'  # Или укажите ваш URL для входа
 
 
 
