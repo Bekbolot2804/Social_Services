@@ -8,7 +8,7 @@ class Help(models.Model):
     image = models.CharField(max_length=255, blank=True, null=True, verbose_name="URL изображения")
     title = models.CharField(max_length=120, verbose_name="Заголовок")
     description = models.CharField(max_length=520, verbose_name="Описание")
-
+    price = models.DecimalField(max_digits=5, verbose_name="Цена")
 
     def __str__(self):
         return self.name
@@ -31,7 +31,6 @@ class Lesion(models.Model):
 class HelpLesion(models.Model):
     help = models.ForeignKey(Help, on_delete=models.CASCADE, related_name='help_lesions', verbose_name="Помощь")
     lesion = models.ForeignKey(Lesion, on_delete=models.CASCADE, related_name='lesion_helps', verbose_name="Поражение")
-    time = models.TimeField(null=True, blank=True, verbose_name="Время")
     comment = models.CharField(max_length=249, verbose_name="Комментарий")
 
 
