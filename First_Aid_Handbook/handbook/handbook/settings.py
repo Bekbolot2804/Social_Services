@@ -85,7 +85,7 @@ WSGI_APPLICATION = 'handbook.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'mydb', # Имя вашей БД. Если вы создали черезе psql или IDE свою базу и хотите использовать его - пропишите его имя здесь
+        'NAME': 'hob', # Имя вашей БД. Если вы создали черезе psql или IDE свою базу и хотите использовать его - пропишите его имя здесь
         'USER': 'root',
         'PASSWORD': 'mydbpass',
         'HOST': '127.0.0.1',
