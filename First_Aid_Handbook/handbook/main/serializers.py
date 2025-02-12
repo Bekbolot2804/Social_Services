@@ -9,7 +9,7 @@ class HelpSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Help
-        fields = ['id', 'name', 'title', 'description', 'image', 'pic', 'price']
+        fields = ['id', 'name', 'title', 'description', 'image', 'pic', 'duration']
 
     def create(self, validated_data):
         # Удаляем поле 'pic' из validated_data, так как оно не является частью модели
