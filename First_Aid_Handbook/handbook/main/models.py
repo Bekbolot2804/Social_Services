@@ -8,7 +8,7 @@ class Help(models.Model):
     image = models.CharField(max_length=255, blank=True, null=True, verbose_name="URL изображения")
     title = models.CharField(max_length=120, verbose_name="Заголовок")
     description = models.CharField(max_length=520, verbose_name="Описание")
-    price = models.DecimalField(max_digits=5, decimal_places=2, verbose_name="Цена")
+    duration = models.PositiveIntegerField(verbose_name="Длительность (мин)")
 
     def __str__(self):
         return self.name
@@ -22,7 +22,8 @@ class Lesion(models.Model):
     date_start = models.DateTimeField(null=True, blank=True, verbose_name="Дата начала")
     date_end = models.DateTimeField(null=True, blank=True, verbose_name="Дата завершения")
     date_applied = models.DateTimeField(null=True, blank=True, verbose_name="Дата подачи заявки")
-
+    def total_duration(self):
+        return sum(help_lesion.help.duration for help_lesion in self.lesion_helps.all())
 
     def __str__(self):
         return self.name
