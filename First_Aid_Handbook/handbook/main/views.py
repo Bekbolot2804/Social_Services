@@ -121,7 +121,7 @@ def get_appl(request):
             'image': relation.help.image,
             'title': relation.help.title,
             'description': relation.help.description,
-            'time': relation.time,
+            'duration': relation.help.duration,
             'comment': relation.comment,
         }
         matched_helps.append(matched_help)
