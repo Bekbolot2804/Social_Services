@@ -3,12 +3,12 @@ from rest_framework.response import Response
 from rest_framework import status
 from django.shortcuts import get_object_or_404
 from django.utils import timezone
-from .models import Help, Lesion, HelpLesion, User
+from .models import Help, Lesion, HelpLesion, CustomUser
 from .serializers import HelpSerializer, LesionSerializer, HelpLesionSerializer
 from .minio import upload_image
 
 def fixed_user():
-    return User.objects.get_or_create(username='fixed_user')[0]
+    return CustomUser.objects.get_or_create(username='fixed_user')[0]
 
 class HelpView(APIView):
     def get(self, request):

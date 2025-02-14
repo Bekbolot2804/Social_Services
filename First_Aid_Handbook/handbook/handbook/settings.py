@@ -144,4 +144,4 @@ AWS_SECRET_ACCESS_KEY = '20042804'
 AWS_S3_ENDPOINT_URL = 'localhost:9000'
 MINIO_USE_SSL = False
 
-AUTH_USER_MODEL = 'main.CustomUser'
+AUTH_USER_MODEL = 'main.CustomUser'  # Должно совпадать с именем модели

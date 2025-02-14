@@ -1,11 +1,12 @@
 from django.db import models
 from django.contrib.auth.models import AbstractUser
+from handbook import settings
 
-class User(AbstractUser):
+class CustomUser(AbstractUser):
     is_moderator = models.BooleanField(default=False)
     
     class Meta:
-        swappable = 'AUTH_USER_MODEL'
+        swappable = 'AUTH_USER_MODEL'  # Корректная настройка для заменяемой модели
 
 class Help(models.Model):
     name = models.CharField(max_length=100)
@@ -24,8 +25,18 @@ class Lesion(models.Model):
     ]
     
     name = models.CharField(max_length=100)
-    creator = models.ForeignKey(User, on_delete=models.CASCADE)
-    moderator = models.ForeignKey(User, null=True, blank=True, on_delete=models.SET_NULL)
+    creator = models.ForeignKey(
+        settings.AUTH_USER_MODEL, 
+        on_delete=models.CASCADE,
+        related_name='created_lesions'
+    )
+    moderator = models.ForeignKey(
+        settings.AUTH_USER_MODEL, 
+        null=True, 
+        blank=True, 
+        on_delete=models.SET_NULL,
+        related_name='moderated_lesions'
+    )
     status = models.CharField(max_length=20, choices=STATUS_CHOICES, default='draft')
     created_at = models.DateTimeField(auto_now_add=True)
     formed_at = models.DateTimeField(null=True, blank=True)
