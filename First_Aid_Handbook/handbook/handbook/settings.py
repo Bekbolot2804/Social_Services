@@ -42,7 +42,6 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'handbook',
     'rest_framework',
-    'drf_spectacular',
     'rest_framework.authtoken'
 ]
 
@@ -54,7 +53,6 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
-    'main.session_auth_middleware.SessionAuthMiddleware',
 ]
 
 ROOT_URLCONF = 'handbook.urls'
@@ -147,13 +145,3 @@ AWS_S3_ENDPOINT_URL = 'localhost:9000'
 MINIO_USE_SSL = False
 
 AUTH_USER_MODEL = 'main.CustomUser'  # Должно совпадать с именем модели
-
-REST_FRAMEWORK = {
-    'DEFAULT_AUTHENTICATION_CLASSES': (
-        'rest_framework.authentication.SessionAuthentication',
-        'rest_framework.authentication.BasicAuthentication',
-    ),
-    'DEFAULT_SCHEMA_CLASS': 'drf_spectacular.openapi.AutoSchema',
-}
-REDIS_HOST = 'localhost'
-REDIS_PORT = 6379

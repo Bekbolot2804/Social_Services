@@ -1,57 +1,16 @@
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
-from rest_framework.decorators import permission_classes  # Добавьте этот импорт
 from django.shortcuts import get_object_or_404
-from drf_spectacular.utils import extend_schema, OpenApiResponse
 from django.utils import timezone
 from .models import Help, Lesion, HelpLesion, CustomUser
 from .serializers import HelpSerializer, LesionSerializer, HelpLesionSerializer
 from .minio import upload_image
-from .serializers import UserSerializer, LoginSerializer
-from .permissions import IsModerator, IsCreator  # Добавьте этот импорт
-import uuid
-import redis
 
-session_storage = redis.StrictRedis(host='localhost', port=6379)
-
-class UserRegistration(APIView):
-    def post(self, request):
-        serializer = UserSerializer(data=request.data)
-        if serializer.is_valid():
-            user = serializer.save()
-            return Response({'user_id': user.id}, status=status.HTTP_201_CREATED)
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-
-class LoginView(APIView):
-    def post(self, request):
-        serializer = LoginSerializer(data=request.data)
-        if serializer.is_valid():
-            user = serializer.validated_data
-            session_id = str(uuid.uuid4())
-            session_storage.set(session_id, user.email)
-            response = Response({'status': 'ok'})
-            response.set_cookie('session_id', session_id)
-            return response
-        return Response({'error': 'Invalid credentials'}, status=401)
-
-class LogoutView(APIView):
-    def post(self, request):
-        session_id = request.COOKIES.get('session_id')
-        if session_id:
-            session_storage.delete(session_id)
-        response = Response({'status': 'logged out'})
-        response.delete_cookie('session_id')
-        return response
+def fixed_user():
+    return CustomUser.objects.get_or_create(username='fixed_user')[0]
 
 class HelpView(APIView):
-    @extend_schema(
-        summary="Get list of help types",
-        responses={
-            200: HelpSerializer(many=True),
-            403: OpenApiResponse(description="Forbidden")
-        }
-    )
     def get(self, request):
         helps = Help.objects.filter(is_active=True)
         serializer = HelpSerializer(helps, many=True)
@@ -85,12 +44,8 @@ class HelpDetailView(APIView):
         return Response(status=status.HTTP_204_NO_CONTENT)
 
 class LesionView(APIView):
-    @permission_classes([IsModerator | IsCreator])  # Применяем декоратор к методу
     def get(self, request):
-        if request.user.is_moderator:
-            lesions = Lesion.objects.all()
-        else:
-            lesions = Lesion.objects.filter(creator=request.user)
+        lesions = Lesion.objects.exclude(status__in=['deleted', 'draft'])
         serializer = LesionSerializer(lesions, many=True)
         return Response(serializer.data)
 
@@ -100,9 +55,8 @@ class LesionDetailView(APIView):
         serializer = LesionSerializer(lesion)
         return Response(serializer.data)
 
-    @permission_classes([IsCreator])  # Применяем декоратор к методу
     def put(self, request, pk):
-        lesion = self.get_object(pk)
+        lesion = get_object_or_404(Lesion, pk=pk)
         serializer = LesionSerializer(lesion, data=request.data, partial=True)
         
         if serializer.is_valid():
