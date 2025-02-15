@@ -4,9 +4,19 @@ from handbook import settings
 
 class CustomUser(AbstractUser):
     is_moderator = models.BooleanField(default=False)
+    is_staff = models.BooleanField(default=False)
     
     class Meta:
-        swappable = 'AUTH_USER_MODEL'  # Корректная настройка для заменяемой модели
+        swappable = 'AUTH_USER_MODEL'
+
+# Удалите это дублирующее определение
+# class Lesion(models.Model):
+#     # Добавить связь с пользователем
+#     creator = models.ForeignKey(
+#         settings.AUTH_USER_MODEL,
+#         on_delete=models.CASCADE,
+#         related_name='lesions'
+#     )
 
 class Help(models.Model):
     name = models.CharField(max_length=100)
