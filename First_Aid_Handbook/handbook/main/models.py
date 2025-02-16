@@ -1,6 +1,6 @@
 from django.db import models
 from django.contrib.auth.models import AbstractUser
-from handbook import settings
+from django.conf import settings  # Правильно
 
 class CustomUser(AbstractUser):
     is_moderator = models.BooleanField(default=False)
@@ -8,15 +8,6 @@ class CustomUser(AbstractUser):
     
     class Meta:
         swappable = 'AUTH_USER_MODEL'
-
-# Удалите это дублирующее определение
-# class Lesion(models.Model):
-#     # Добавить связь с пользователем
-#     creator = models.ForeignKey(
-#         settings.AUTH_USER_MODEL,
-#         on_delete=models.CASCADE,
-#         related_name='lesions'
-#     )
 
 class Help(models.Model):
     name = models.CharField(max_length=100)

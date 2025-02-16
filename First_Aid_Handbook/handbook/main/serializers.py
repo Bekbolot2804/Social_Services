@@ -4,7 +4,7 @@ from .models import Help, Lesion, HelpLesion, CustomUser
 class HelpSerializer(serializers.ModelSerializer):
     class Meta:
         model = Help
-        fields = 'all'
+        fields = '__all__'
         read_only_fields = ['image_url']
 
 class HelpLesionSerializer(serializers.ModelSerializer):
@@ -17,7 +17,7 @@ class LesionSerializer(serializers.ModelSerializer):
     
     class Meta:
         model = Lesion
-        fields = 'all'
+        fields = '__all__'
         read_only_fields = ['creator', 'moderator', 'created_at', 'formed_at', 'completed_at']
 
 class UserSerializer(serializers.ModelSerializer):

@@ -44,7 +44,8 @@ INSTALLED_APPS = [
     'handbook',
     'rest_framework',
     'drf_spectacular',
-    'rest_framework.authtoken'
+    'rest_framework.authtoken',
+    'django_extensions'
 ]
 
 MIDDLEWARE = [
