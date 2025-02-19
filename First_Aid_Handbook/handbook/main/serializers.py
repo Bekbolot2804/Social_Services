@@ -1,5 +1,13 @@
 from rest_framework import serializers
 from .models import Help, Lesion, HelpLesion
+from main.models import CustomUser
+
+class UserSerializer(serializers.ModelSerializer):
+    is_staff = serializers.BooleanField(default=False, required=False)
+    is_superuser = serializers.BooleanField(default=False, required=False)
+    class Meta:
+        model = CustomUser
+        fields = ['email', 'password', 'is_staff', 'is_superuser']
 
 class HelpSerializer(serializers.ModelSerializer):
     class Meta:
