@@ -42,8 +42,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'handbook',
     'rest_framework',
-    'rest_framework.authtoken',
-    'drf_yasg',
+    'rest_framework.authtoken'
 ]
 
 MIDDLEWARE = [
@@ -128,8 +127,7 @@ USE_I18N = True
 
 USE_TZ = True
 
-REDIS_HOST = '0.0.0.0'
-REDIS_PORT = 6379
+
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/5.1/howto/static-files/
 
@@ -145,14 +143,5 @@ AWS_ACCESS_KEY_ID = 'beka'
 AWS_SECRET_ACCESS_KEY = '20042804'
 AWS_S3_ENDPOINT_URL = 'localhost:9000'
 MINIO_USE_SSL = False
-REST_FRAMEWORK = {
-    'DEFAULT_AUTHENTICATION_CLASSES': [
-        'rest_framework.authentication.BasicAuthentication',
-        'rest_framework.authentication.SessionAuthentication',
-        'rest_framework.authentication.TokenAuthentication',
-    ],
-    'DEFAULT_PERMISSION_CLASSES': [
-        'rest_framework.permissions.IsAuthenticatedOrReadOnly',
-    ]
-}
+
 AUTH_USER_MODEL = 'main.CustomUser'  # Должно совпадать с именем модели

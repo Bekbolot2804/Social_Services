@@ -4,99 +4,18 @@ from rest_framework import status
 from django.shortcuts import get_object_or_404
 from django.utils import timezone
 from .models import Help, Lesion, HelpLesion, CustomUser
-from .serializers import HelpSerializer, LesionSerializer, HelpLesionSerializer, UserSerializer
+from .serializers import HelpSerializer, LesionSerializer, HelpLesionSerializer
 from .minio import upload_image
-from django.contrib.auth import authenticate, login, logout
-from django.http import HttpResponse
-from rest_framework.permissions import AllowAny
-from django.views.decorators.csrf import csrf_exempt
-from rest_framework.decorators import permission_classes
-from rest_framework.decorators import permission_classes
-from rest_framework.permissions import AllowAny
-from rest_framework.decorators import authentication_classes, permission_classes
-from drf_yasg.utils import swagger_auto_schema
-from rest_framework.decorators import api_view
-from rest_framework import viewsets
-from rest_framework.authentication import SessionAuthentication, BasicAuthentication
-from rest_framework.decorators import authentication_classes
-from rest_framework.permissions import IsAuthenticatedOrReadOnly
-from rest_framework.permissions import IsAdminUser
-from django.views.decorators.csrf import csrf_exempt
-from django.utils.decorators import method_decorator
-from django.conf import settings
-import redis
 
-# Connect to our Redis instance
-session_storage = redis.StrictRedis(host=settings.REDIS_HOST, port=settings.REDIS_PORT)
-
-@permission_classes([AllowAny])
-@authentication_classes([])
-@csrf_exempt
-@swagger_auto_schema(method='post', request_body=UserSerializer)
-@api_view(['Post'])
-def login_view(request):
-    username = request.POST["email"] 
-    password = request.POST["password"]
-    user = authenticate(request, email=username, password=password)
-    if user is not None:
-        random_key = uuid.uuid4()
-        session_storage.set(random_key, username)
-
-        response = HttpResponse("{'status': 'ok'}")
-        response.set_cookie("session_id", random_key)
-
-        return response
-    else:
-        return HttpResponse("{'status': 'error', 'error': 'login failed'}")
-@authentication_classes([])
-def logout_view(request):
-    logout(request._request)
-    return Response({'status': 'Success'})
-class UserViewSet(viewsets.ModelViewSet):
-    authentication_classes = [SessionAuthentication, BasicAuthentication]
-    """Класс, описывающий методы работы с пользователями
-    Осуществляет связь с таблицей пользователей в базе данных
-    """
-    queryset = CustomUser.objects.all()
-    serializer_class = UserSerializer
-    model_class = CustomUser
-    def get_permissions(self):
-        if self.action == 'create':
-            permission_classes = [AllowAny]
-        else:
-            permission_classes = [IsAdminUser]
-        return [permission() for permission in permission_classes]
-    @method_decorator(csrf_exempt)
-    def create(self, request):
-        serializer = self.serializer_class(data=request.data)
-        if serializer.is_valid():
-            # Используйте create_user вместо create!
-            user = self.model_class.objects.create_user(
-                email=serializer.validated_data['email'],
-                password=serializer.validated_data['password'],
-                is_staff=serializer.validated_data.get('is_staff', False),
-                is_superuser=serializer.validated_data.get('is_superuser', False)
-            )
-            return Response({'status': 'Success'}, status=201)
-        return Response(serializer.errors, status=400)
-def method_permission_classes(classes):
-    def decorator(func):
-        def decorated_func(self, *args, **kwargs):
-            self.permission_classes = classes        
-            self.check_permissions(self.request)
-            return func(self, *args, **kwargs)
-        return decorated_func
-    return decorator
 def fixed_user():
     return CustomUser.objects.get_or_create(username='fixed_user')[0]
 
 class HelpView(APIView):
-    authentication_classes = [SessionAuthentication, BasicAuthentication]
     def get(self, request):
         helps = Help.objects.filter(is_active=True)
         serializer = HelpSerializer(helps, many=True)
         return Response(serializer.data)
-    @swagger_auto_schema(request_body=HelpSerializer)
+
     def post(self, request):
         serializer = HelpSerializer(data=request.data)
         if serializer.is_valid():
@@ -105,14 +24,11 @@ class HelpView(APIView):
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 class HelpDetailView(APIView):
-    authentication_classes = [SessionAuthentication, BasicAuthentication]
-    permission_classes = [IsAuthenticatedOrReadOnly]
     def get(self, request, pk):
         help = get_object_or_404(Help, pk=pk)
         serializer = HelpSerializer(help)
         return Response(serializer.data)
-    @swagger_auto_schema(request_body=HelpSerializer)
-    @method_permission_classes((IsAdminUser))
+
     def put(self, request, pk):
         help = get_object_or_404(Help, pk=pk)
         serializer = HelpSerializer(help, data=request.data, partial=True)
@@ -202,14 +118,3 @@ class ImageUploadView(APIView):
         help.save()
         
         return Response({"image_url": url}, status=200)
-@swagger_auto_schema(method='put', request_body=HelpSerializer)
-@api_view(['Put'])
-@permission_classes([AllowAny])
-@authentication_classes([])
-def put_detail(request, pk, format=None):
-    help = get_object_or_404(Help, pk=pk)
-    serializer = HelpSerializer(help, data=request.data, partial=True)
-    if serializer.is_valid():
-        serializer.save()
-        return Response(serializer.data)
-    return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
