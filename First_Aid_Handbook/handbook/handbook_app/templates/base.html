@@ -1,0 +1,20 @@
+<!doctype html>
+<html lang="en" class="h-100">
+<head>
+    <meta charset="utf-8">
+    <title>{% block title %}{% endblock %}</title>
+    {% load static %}
+    <link rel="stylesheet" type="text/css" href="{% static 'css/styles.css' %}">
+</head>
+<body style = "margin: 0">
+    <div class="headerSpace">
+        <div class="header">
+            <a href="{% url 'home' %}">
+                <img src="http://127.0.0.1:9000/images/icons/radioactive_logo.png" alt="logo" class="logoImage">
+	        </a>
+            <h1 class="oswaldH"><a href="{% url 'home' %}">Радиоактивные элементы</h6></a>
+        </div>
+    </div>
+    {% block container %}{% endblock %}
+</body>
+</html>

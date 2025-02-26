@@ -1,0 +1,333 @@
+@font-face {
+    font-family: 'Oswald';
+    src: url('http://127.0.0.1:9000/images/fonts/oswald.ttf') format('truetype');
+    font-weight: normal;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'giaGeor';
+    src: url('http://127.0.0.1:9000/images/fonts/georgia.ttf') format('truetype');
+    font-weight: normal;
+    font-style: normal;
+}
+
+html {
+    font-size: 0.85px;
+}
+
+.headerSpace {
+    height: 100rem;
+    width: 100%;
+    background-color: black;
+    display: flex;
+    padding: 0 8.2%;
+    box-sizing: border-box;
+    display: flex;   
+}
+
+.header {
+    height: 100rem;
+    width: 90%;
+    display: flex;
+    box-sizing: border-box;
+    display: flex;
+    align-items: center; 
+}
+
+.logoImage {
+    height: 92rem;
+    width: 92rem;
+    margin-right: 10rem;
+}
+
+.header a {
+    text-decoration: none;
+    color: white;
+}
+
+.header h1 {
+    font-size: 48rem;
+    margin: 0;
+    color: white;
+    letter-spacing: 2rem; 
+}
+
+.helpsContainer {
+    margin-left: 8.2%;
+    margin-right: 8.2%;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+}
+
+.searchSpace {
+    width: 100%;
+    height: 100rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    box-sizing: border-box;
+}
+
+.searchContainer {
+    flex: 1;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.searchBar {
+    font-family: 'Oswald', sans-serif;
+    font-size: 40rem;
+    font-weight: 400;
+    background-color: black;
+    height: 63rem;
+    width: 685rem;
+    border: 0px;
+    color: white;
+    border-radius: 0px;
+    margin-right: 6rem;
+    padding-left: 10rem;
+}
+
+.searchButton {
+    font-family: 'Oswald', sans-serif;
+    font-size: 40rem;
+    font-weight: 400;
+    background-color: black;
+    border: 0px;
+    border-radius: 0px;
+    color: white;
+    width: 203rem;
+    height: 63rem;
+    cursor: pointer;
+}
+
+.circle {
+    width: 35rem;
+    height: 35rem;
+    border-radius: 50%;
+    background-color: #FF2727;
+    right: 5rem;
+    top: 105rem;
+    position: absolute;
+    z-index: 10;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 32rem;
+    color: black;
+}
+
+.lesionLogo {
+    border-radius: 10rem;
+    height: 75rem;
+    width: 75rem;
+    right: 20rem;
+    position: absolute;
+    top: 113rem;
+}
+
+.card {
+    border: 2rem solid #8A8A8A;
+    padding: 33rem 33rem 33rem 33rem;
+    box-sizing: border-box;
+}
+
+.cardhelps {
+    width: 358rem;
+    margin-bottom: 40rem;
+}
+
+.cardLogo {
+    height: 288rem;
+    width: 288rem;
+}
+
+.cardName {
+    height: 59rem;
+    width: 288rem;
+}
+
+.oswaldH {
+    font-family: 'Oswald', sans-serif;
+    font-weight: 600;
+}
+
+.cardName h2 {
+    font-size: 40rem;
+    margin: 0;
+    color: black;
+}
+
+.cardAbout {
+    height: 76rem;
+    width: 288rem;
+}
+
+.georgiaP {
+    font-family: 'Georgia', sans-serif;
+    font-weight: 400;
+}
+
+.cardAbout p {
+    font-size: 24rem;
+    color: black;
+    margin: 0;
+}
+
+.button {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: black;
+    text-decoration: none;
+}
+
+.button:hover {
+    background-color: black;
+}
+
+.button:active {
+    background-color: #242424;
+}
+
+.cardButton {
+    width: 288rem;
+    height: 51rem;
+    color: #B9CDFB;
+    font-size: 32rem;
+    letter-spacing: 1rem;
+}
+
+.aboutHead {
+    margin-left: 8.2%;
+    margin-right: 8.2%;
+    margin-top: 59rem;
+    height: 381rem;
+    display: flex;  
+}
+
+.aboutHeadLogo {
+    height: 381rem;
+    width: 381rem;
+    margin-right: 42rem;
+}
+
+.aboutHeadContent {
+    display: flex;
+    flex-direction: column;
+}
+
+.aboutHeadContent h2 {
+    color: black;
+    margin: 0;
+    font-size: 96rem;
+}
+
+.aboutHeadContent p {
+    color: black;
+    margin: 0;
+    font-size: 32rem;
+}
+
+.aboutContent {
+    margin-left: 8.2%;
+    margin-right: 8.2%;
+    margin-top: 32rem;
+}
+
+.aboutContent p {
+    font-size: 32rem;
+    margin: 0;
+}
+
+.lesionhelpsContainer {
+    margin-left: 16.1%;
+    margin-right: 16.1%;
+}
+
+.lesionCard {
+    width: 1298rem;
+    height: 358rem;
+    margin-bottom: 41rem;
+    display: flex; 
+}
+
+.lesionCardLogo {
+    width: 288rem;
+    height: 288rem;
+}
+
+.lesionCardContent {
+    margin-left: 19rem;
+}
+
+.lesionCardContent h2 {
+    font-size: 40rem;
+    margin: 0;
+}
+
+.lesionCardInput {
+    margin-top: 59rem;
+    display: flex;
+    align-items: center;
+}
+
+.lesionCardInput p {
+    font-size: 36rem;
+    margin: 0;
+    width: 387rem;
+}
+
+.lesionInput {
+    width: 530rem;
+    font-family: 'Oswald', sans-serif;
+    font-size: 36rem;
+    font-weight: 400;
+    background-color: black;
+    border: 0px;
+    color: white;
+    border-radius: 0px;
+    padding-left: 10rem;
+}
+
+.lesionPassTime {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding-top: 28rem;
+    padding-bottom: 28rem;
+}
+
+.lesionPassTime p {
+    font-size: 36rem;
+    margin: 0;
+    width: 387rem;
+}
+
+#deleteButton {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: #cd0000;
+    border: 0;
+    text-decoration: none;
+    width: 288rem;
+    height: 51rem;
+    color: #B9CDFB;
+    font-size: 32rem;
+    letter-spacing: 1rem;
+    position: absolute;
+    right: 25rem;
+    top: 25rem
+}
+    
+#deleteButton:hover {
+    background-color: #cd0000;
+}
+
+#deleteButton:active {
+    background-color: #940000;
+}

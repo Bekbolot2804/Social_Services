@@ -1,0 +1,33 @@
+{% extends 'base.html' %}
+
+{% block title %} Распад {% endblock %}
+
+{% block container %}
+{% if permission == 1 %}
+<form action="{% url 'delete_lesion' %}" method="post">
+    {% csrf_token %}
+    <input type="hidden" name="lesion_id" value="{{ lesion_id }}">
+    <button class = 'oswaldH' id = "deleteButton" style="cursor: pointer;">Удалить</button>
+</form>
+<div class="lesionPassTime">
+    <p class = "georgiaP">Прошло времени: </p>
+    <input type="text" class="lesionInput" name="lesion_helps_pass_time" value="{{pass_time|default:''}}">
+</div>
+<div class = "lesionhelpsContainer">
+    {% for lesion_help in lesion_helps %}
+    <div class = "lesionCard card">
+        <img src="{{lesion_help.help.img_url}}" alt = "lesionCardLogo" class = "lesionCardLogo">
+        <div class = "lesionCardContent">
+            <h2 class = "oswaldH">{{lesion_help.help.name}}</h2>
+            <div class = "lesionCardInput">
+                <p class = "georgiaP">Количество вещества: </p>
+                <input type="text" class="lesionInput" name="lesion_help_mass_input" value="{{lesion_help.quantity|default:''}}">
+            </div>
+        </div>
+    </div>
+    {% endfor %}
+</div>
+{% else %}
+<h1 class="oswaldH" style = "font-size: 96rem; text-align: center;">Нет доступа к просмотру</h1>
+{% endif %}
+{% endblock %}
