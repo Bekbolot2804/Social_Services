@@ -657,8 +657,7 @@ class moderatelesion(APIView):
                 for help in helps:
                     try:
                         help.remaining_quantity = HalfLifeCalculation.half_life_calculation(lesion.pass_time, 
-                                                                                                help.quantity, 
-                                                                                                help.help.)
+                                                                                                help.quantity)
                     except NameError:
                         help.remaining_quantity = 'Неверный формат входных данных'
                     except ValueError:
