@@ -9,7 +9,6 @@ from django.db.models import Q
 from .models import *
 from .serializers import *
 from .minio import deleteImg, addImg
-from .hl_calc import HalfLifeCalculation
 from .permissions import IsManager, IsAdmin, AuthBySSID, IsAuth
 from .redis import session_storage
 
@@ -131,14 +130,14 @@ class HelpsMethods(APIView):
                             openapi.Parameter(
                                 name = 'duration',
                                 in_ = openapi.IN_QUERY,
-                                description='Атомная масса',
+                                description='Время',
                                 type=openapi.TYPE_STRING,
                                 required=False
                             ),
                          ],
                          responses={
                             200: openapi.Response(
-                                description='Элементы с номером черновой заявки и количеством в корзине',
+                                description='Протоколы первой помощи с номером черновой заявки и количеством в корзине',
                                 schema=openapi.Schema(
                                     type=openapi.TYPE_OBJECT,
                                     properties={
@@ -215,11 +214,11 @@ class HelpMethods(APIView):
 
     @swagger_auto_schema(responses={
                             200: openapi.Response(
-                                description='Успешное получение 1 элемента',
+                                description='Успешное получение одного протокола помощи',
                                 schema=HelpSerializer
                             ),
                             404: openapi.Response(
-                                description='Не нашли элемент с таким id',
+                                description='Не нашли услугу с таким id',
                                 schema=error_schema
                             )
     })
@@ -276,7 +275,7 @@ class HelpMethods(APIView):
     @swagger_auto_schema(request_body=serializer,
                          responses={
                             200: openapi.Response(
-                                description='Успешное изменение элемента',
+                                description='Успешное изменение услуги',
                                 schema=HelpSerializer
                             ),
                             403: openapi.Response(
@@ -284,7 +283,7 @@ class HelpMethods(APIView):
                                 schema=error_schema
                             ),
                             404: openapi.Response(
-                                description='Нет такого элемента',
+                                description='Нет такой услуги',
                                 schema=error_schema
                             )
     })
@@ -299,7 +298,7 @@ class HelpMethods(APIView):
     
     @swagger_auto_schema(responses={
                             200: openapi.Response(
-                                description='Успешное изменение элемента',
+                                description='Успешное изменение услуги',
                                 schema=HelpSerializer
                             ),
                             403: openapi.Response(
@@ -307,11 +306,11 @@ class HelpMethods(APIView):
                                 schema=error_schema
                             ),
                             404: openapi.Response(
-                                description='Нет такого элемента',
+                                description='Нет такой услуги',
                                 schema=error_schema
                             ),
                             400: openapi.Response(
-                                description='Элемент уже удален',
+                                description='Услуга уже удалена',
                                 schema=error_schema
                             )
     })
@@ -345,7 +344,7 @@ class HelpMethods(APIView):
                             schema=error_schema
                         ),
                         202: openapi.Response(
-                            description='Картинка успешко загружена',
+                            description='Картинка успешно загружена',
                             schema=HelpSerializer
                         ),
                         400: openapi.Response(
@@ -353,7 +352,7 @@ class HelpMethods(APIView):
                             schema=error_schema
                         ),
                         404: openapi.Response(
-                            description='Такого элемента нет',
+                            description='Такой услуги нет',
                             schema=error_schema
                         )
 })
@@ -410,7 +409,7 @@ class HelpLesionMethods(APIView):
                                 schema=error_schema
                             ),
                             404: openapi.Response(
-                                description='Нет такого элемента в таком распаде',
+                                description='Нет такого протокола помощи при этом поражении',
                                 schema=error_schema
                             ),
                             200: openapi.Response(
@@ -511,11 +510,11 @@ class lesionMethods(APIView):
                                 schema=error_schema
                             ),
                             404: openapi.Response(
-                                description='Такого распада не существует',
+                                description='Такого поражения не существует',
                                 schema=error_schema
                             ),
                             200: openapi.Response(
-                                description='Успешное получение распада',
+                                description='Успешное получение критического поражения',
                                 schema=LesionSerializer
                             ),
     })
@@ -538,7 +537,7 @@ class lesionMethods(APIView):
                                 schema=error_schema
                             ),
                             404: openapi.Response(
-                                description='Нет такого распада',
+                                description='Нет такого поражения',
                                 schema=error_schema
                             ),
                             200: openapi.Response(
@@ -567,7 +566,7 @@ class forminglesion(APIView):
                                 schema=error_schema
                             ),
                             404: openapi.Response(
-                                description='Нет такого распада',
+                                description='Нет такого поражения',
                                 schema=error_schema
                             ),
                             202: openapi.Response(
@@ -629,7 +628,7 @@ class moderatelesion(APIView):
                                 schema=error_schema
                             ),
                             404: openapi.Response(
-                                description='Нет такого распада',
+                                description='Нет такого поражения',
                                 schema=error_schema
                             ),
                             400: openapi.Response(
