@@ -21,6 +21,7 @@ from rest_framework import permissions
 from django.urls import path, include
 from drf_yasg.views import get_schema_view
 from drf_yasg import openapi
+from graphene_django.views import GraphQLView
 
 schema_view = get_schema_view(
    openapi.Info(
@@ -37,7 +38,7 @@ schema_view = get_schema_view(
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    
+    path("graphql", GraphQLView.as_view(graphiql=True)),
     path('api/helps/', views.HelpsMethods.as_view(), name = 'helps'),
     path('api/helps/<int:help_id>/', views.HelpMethods.as_view(), name = 'help'),
     path('api/helps/<int:help_id>/add_img/', views.helpAddImg, name = 'helpAddImg'),

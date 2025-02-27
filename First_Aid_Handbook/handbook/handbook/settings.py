@@ -41,7 +41,8 @@ INSTALLED_APPS = [
     'rest_framework',
     'drf_yasg',
     'corsheaders',
-    'django_extensions'
+    'django_extensions',
+    'graphene_django'
 ]
 
 MIDDLEWARE = [
@@ -147,7 +148,9 @@ STATIC_URL = 'static/'
 STATICFILES_DIRS = [
     BASE_DIR / "static",
 ]
-
+GRAPHENE = {
+    'SCHEMA': '<your_project>.schema.schema',
+}
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.1/ref/settings/#default-auto-field
 
