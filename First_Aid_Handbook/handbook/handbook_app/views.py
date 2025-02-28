@@ -76,7 +76,7 @@ def getlesionInformation(user):
                         )
 })
 @api_view(['post'])
-@authentication_classes([])
+@authentication_classes([AuthBySSID])
 @permission_classes([AllowAny])
 def login_view(request):
     username = request.data["email"] 
@@ -128,9 +128,9 @@ class HelpsMethods(APIView):
 
     @swagger_auto_schema(manual_parameters=[
                             openapi.Parameter(
-                                name = 'duration',
+                                name = 'name',
                                 in_ = openapi.IN_QUERY,
-                                description='Время',
+                                description='Имя',
                                 type=openapi.TYPE_STRING,
                                 required=False
                             ),
@@ -141,7 +141,7 @@ class HelpsMethods(APIView):
                                 schema=openapi.Schema(
                                     type=openapi.TYPE_OBJECT,
                                     properties={
-                                        'duration': openapi.Schema(type=openapi.TYPE_STRING),
+                                        'name': openapi.Schema(type=openapi.TYPE_STRING),
                                         'helps': openapi.Schema(
                                             type=openapi.TYPE_ARRAY,
                                             items=openapi.Schema(type=openapi.TYPE_OBJECT,
@@ -170,21 +170,21 @@ class HelpsMethods(APIView):
                                             required=['lesion_helps_count', 'lesion_id']
                                         )
                                     },
-                                    required=['duration', 'helps', 'lesion_information']
+                                    required=['name', 'helps', 'lesion_information']
                                 )
                             )
     })
     @method_permission_classes([AllowAny])
     def get(self, request):
-        duration = request.query_params.get('duration', '')
-        helps = Help.objects.filter(duration__contains=duration)
+        search_name = request.query_params.get('name', '')
+        helps = Help.objects.filter(name__icontains=search_name)
         if request.user.is_authenticated:
             lesion_information = getlesionInformation(request.user)
         else:
             lesion_information = {'lesion_helps_count': 0, 
                                  'lesion_id': 0}
         serial_data = self.serializer(helps, many = True)
-        return Response({'duration': duration, 
+        return Response({'name': search_name, 
                          'helps': serial_data.data, 
                          'lesion_information': lesion_information},
                          status=status.HTTP_200_OK)
@@ -224,7 +224,7 @@ class HelpMethods(APIView):
     })
     @method_permission_classes([AllowAny])
     def get(self, request, help_id):
-        help = get_object_or_404(help, pk=help_id)
+        help = get_object_or_404(Help, pk=help_id)
         if help.status == 'deleted':
             if request.user.is_anonymous:
                 return Response({'details': 'Forbidden'}, status=status.HTTP_403_FORBIDDEN)
@@ -260,15 +260,15 @@ class HelpMethods(APIView):
             creator = request.user,
             status = 'draft',
         )
-        if Help_lesion.objects.filter(help=help_id, lesion=Lesion.lesion_id).exists():
+        if Help_lesion.objects.filter(help=help_id, lesion=lesion.lesion_id).exists():
             return Response({'details': 'Уже добавлено'}, status=status.HTTP_400_BAD_REQUEST)
         else:
             Help_lesion.objects.create(
-                lesion = Lesion.objects.get(lesion_id=Lesion.lesion_id),
+                lesion = Lesion.objects.get(lesion_id=lesion.lesion_id),
                 help = Help.objects.get(help_id=help_id)
             )
             lesion_id = request.user.user_lesions.all().filter(status='draft').first().lesion_id
-            lesion_helps_count = Help_lesion.objects.filter(lesion_id=Lesion.lesion_id).count()
+            lesion_helps_count = Help_lesion.objects.filter(lesion_id=lesion.lesion_id).count()
             return Response({'lesion_information': {'lesion_id': lesion_id, 'lesion_helps_count': lesion_helps_count}}, status=status.HTTP_200_OK)
     
 
@@ -289,7 +289,7 @@ class HelpMethods(APIView):
     })
     @method_permission_classes([IsManager])
     def put(self, request, help_id):
-        help = get_object_or_404(help, pk=help_id)
+        help = get_object_or_404(Help, pk=help_id)
         changed_help = self.serializer(help, request.data, partial=True)
         if changed_help.is_valid():
             changed_help.save()
@@ -316,9 +316,9 @@ class HelpMethods(APIView):
     })
     @method_permission_classes([IsManager])
     def delete(self, request, help_id):
-        help = get_object_or_404(help, pk=help_id)
-        if help.status != 'deleted':
-            help.status = 'deleted'
+        help = get_object_or_404(Help, pk=help_id)
+        if help.status != '0':
+            help.status = '0'
             if deleteImg(help.img_url) == 'success':
                 help.img_url = ''
                 help.save()
@@ -360,7 +360,7 @@ class HelpMethods(APIView):
 @authentication_classes([AuthBySSID])
 @permission_classes([IsManager])
 def helpAddImg(request, help_id):
-    help = get_object_or_404(help, help_id=help_id)
+    help = get_object_or_404(Help, help_id=help_id)
     img = request.FILES.get('img')
     try:
         past_url = help.img_url
@@ -392,15 +392,15 @@ class HelpLesionMethods(APIView):
     })
     @method_permission_classes([IsAuth])
     def delete(self, request, help_id, lesion_id):
-        Help_lesion = get_object_or_404(Help_lesion, help=help_id, lesion=lesion_id)
-        Help_lesion.delete()
+        help_lesion = get_object_or_404(Help_lesion, help=help_id, lesion=lesion_id)
+        help_lesion.delete()
         helps_lesion = Help_lesion.objects.filter(lesion=lesion_id)
         return Response(self.serializer(helps_lesion, many=True).data, status=status.HTTP_200_OK)
 
     @swagger_auto_schema(request_body=openapi.Schema(
                             type=openapi.TYPE_OBJECT,
                             properties={
-                                'quantity': openapi.Schema(type=openapi.TYPE_STRING)
+                                'comment': openapi.Schema(type=openapi.TYPE_STRING)
                             },
                          ),
                          responses={
@@ -419,8 +419,8 @@ class HelpLesionMethods(APIView):
     })
     @permission_classes([IsAuth])
     def put(self, request, help_id, lesion_id):
-        Help_lesion = get_object_or_404(Help_lesion, help=help_id, lesion=lesion_id)
-        changed_Help_lesion = self.serializer(Help_lesion, data=request.data, partial=True) 
+        help_lesion = get_object_or_404(Help_lesion, help=help_id, lesion=lesion_id)
+        changed_Help_lesion = self.serializer(help_lesion, data=request.data, partial=True) 
         if changed_Help_lesion.is_valid():
             changed_Help_lesion.save() 
             helps_lesion = Help_lesion.objects.filter(lesion=lesion_id)
@@ -520,7 +520,7 @@ class lesionMethods(APIView):
     })
     @method_permission_classes([IsAuth])
     def get(self, request, lesion_id):
-        lesion = get_object_or_404(lesion, lesion_id=lesion_id)
+        lesion = get_object_or_404(Lesion, lesion_id=lesion_id)
         if lesion.creator != request.user and not request.user.is_staff:
             return Response({'details:', 'Forbidden'}, status=status.HTTP_403_FORBIDDEN)
         return Response(self.serializer(lesion).data, status=status.HTTP_200_OK)
@@ -576,18 +576,15 @@ class forminglesion(APIView):
     })
     @method_permission_classes([IsAuth])
     def put(self, request, lesion_id):
-        lesion = get_object_or_404(lesion, creator = request.user, lesion_id=lesion_id)
+        lesion = get_object_or_404(Lesion, creator = request.user, lesion_id=lesion_id)
         helps = lesion.lesion_helps.all()
-        if not lesion.pass_time is None and lesion.pass_time != '':
-            for help in helps:
-                if help.quantity is None or help.quantity == '':
-                    return Response({'details': 'quantity'}, status=status.HTTP_400_BAD_REQUEST)
-            lesion.status = 'formed'
-            lesion.date_of_formation = timezone.now()
-            lesion.save()
-            return Response(self.serializer(lesion).data, status=status.HTTP_202_ACCEPTED)
-        else:
-            return Response({'details': 'pass_time'}, status=status.HTTP_400_BAD_REQUEST)
+        for help in helps:
+            if help.comment is None or help.comment == '':
+                return Response({'details': 'comment'}, status=status.HTTP_400_BAD_REQUEST)
+        lesion.status = 'formed'
+        lesion.date_of_formation = timezone.now()
+        lesion.save()
+        return Response(self.serializer(lesion).data, status=status.HTTP_202_ACCEPTED)
     
     @swagger_auto_schema(responses={
                             403: openapi.Response(
@@ -605,7 +602,7 @@ class forminglesion(APIView):
     })
     @method_permission_classes([IsAuth])
     def delete(self, request, lesion_id):
-        lesion = get_object_or_404(lesion, creator = request.user, lesion_id=lesion_id)
+        lesion = get_object_or_404(Lesion, creator = request.user, lesion_id=lesion_id)
         lesion.status = 'deleted'
         lesion.date_of_formation = timezone.now()
         lesion.save()
@@ -642,7 +639,7 @@ class moderatelesion(APIView):
     })
     @method_permission_classes([IsManager])
     def put(self, request, lesion_id):
-        lesion = get_object_or_404(lesion, pk=lesion_id)
+        lesion = get_object_or_404(Lesion, pk=lesion_id)
         accept = request.data.get('accept')
         if lesion.status == 'formed':
             if accept == 'false':
@@ -653,15 +650,10 @@ class moderatelesion(APIView):
                 return Response(self.serializer(lesion).data, status=status.HTTP_202_ACCEPTED)
             elif accept == 'true':
                 helps = lesion.lesion_helps.all()
+                sum_duration = 0
                 for help in helps:
-                    try:
-                        help.remaining_quantity = HalfLifeCalculation.half_life_calculation(lesion.pass_time, 
-                                                                                                help.quantity)
-                    except NameError:
-                        help.remaining_quantity = 'Неверный формат входных данных'
-                    except ValueError:
-                        help.remaining_quantity = 'Неверный формат единиц измерения'
-                    help.save()
+                    sum_duration += help.help.duration
+                lesion.sum_duration = sum_duration
                 lesion.moderator = request.user
                 lesion.status = 'completed'
                 lesion.date_of_finish = timezone.now()
@@ -758,7 +750,7 @@ class attributeListMethods(APIView):
     def post(self, request, help_id):
         attribute_name = request.data.get('name', '')
         attribute_value = request.data.get('value', '')
-        help = get_object_or_404(help, pk=help_id)
+        help = get_object_or_404(Help, pk=help_id)
         if Attribute.objects.filter(name=attribute_name).exists():
             attribute = Attribute.objects.get(name=attribute_name)
         else:
@@ -776,7 +768,7 @@ class attributeListMethods(APIView):
                         })
     @method_permission_classes([AllowAny])
     def get(self, request, help_id):
-        help = get_object_or_404(help, pk=help_id)
+        help = get_object_or_404(Help, pk=help_id)
         return Response(HelpForAttributesSerializer(help).data, status=status.HTTP_200_OK)
         
 class attributeDetailMethods(APIView):
@@ -810,7 +802,7 @@ class attributeDetailMethods(APIView):
                         })
     @method_permission_classes([IsManager])
     def put(self, request, help_id, attribute_id):
-        help = get_object_or_404(help, pk=help_id)
+        help = get_object_or_404(Help, pk=help_id)
         attribute = get_object_or_404(Attribute, pk=attribute_id)
         value = request.data.get('value', '')
         help_attribute = get_object_or_404(Attribute_help, attribute=attribute, help=help)

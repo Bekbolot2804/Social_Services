@@ -41,8 +41,8 @@ class CustomUser(AbstractBaseUser, PermissionsMixin):
 
 class Help(models.Model):
     status_choices = [
-        ('active', 'действует'),
-        ('deleted', 'удален')
+        ('1', 'действует'),
+        ('0', 'удален')
     ]
 
     help_id = models.AutoField(primary_key=True)
@@ -67,15 +67,14 @@ class Lesion(models.Model):
     creator = models.ForeignKey(get_user_model(), on_delete=models.DO_NOTHING, related_name='user_lesions')
     date_of_formation = models.DateTimeField(null=True, blank=True)
     date_of_finish = models.DateTimeField(null=True, blank=True)
-    pass_time = models.CharField(max_length=30, null=True, blank=True)
+    sum_duration = models.IntegerField(null=True, blank=True)
     moderator = models.ForeignKey(get_user_model(), on_delete=models.DO_NOTHING, related_name='moderator_lesions', null=True, blank=True)
     qr = models.TextField(null=True)
 
 class Help_lesion(models.Model):
     help = models.ForeignKey(Help, on_delete=models.DO_NOTHING, related_name='Help_lesions')
     lesion = models.ForeignKey(Lesion, on_delete=models.DO_NOTHING, related_name='lesion_helps')
-    quantity = models.CharField(max_length=30, null=True, blank=True)
-    remaining_quantity = models.CharField(max_length=40, null=True, blank=True)
+    comment = models.CharField(max_length=100, null=True, blank=True)
     class Meta:
         unique_together = ('help', 'lesion')
 

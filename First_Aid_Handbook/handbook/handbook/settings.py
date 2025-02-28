@@ -25,7 +25,11 @@ SECRET_KEY = 'django-insecure-=pru67xu%qr)zp(71sqb8l=t10(lnfh39w!f15o-d+2rx#5yu0
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['*']
+ALLOWED_HOSTS = [
+    'localhost',
+    '127.0.0.1',
+    'tauri.localhost',
+]
 
 
 # Application definition
@@ -42,7 +46,8 @@ INSTALLED_APPS = [
     'drf_yasg',
     'corsheaders',
     'django_extensions',
-    'graphene_django'
+    'graphene_django',
+    'sslserver',
 ]
 
 MIDDLEWARE = [
@@ -149,7 +154,8 @@ STATICFILES_DIRS = [
     BASE_DIR / "static",
 ]
 GRAPHENE = {
-    'SCHEMA': '<your_project>.schema.schema',
+    'SCHEMA': 'handbooks.schema.schema',
+    "MIDDLEWARE": ["graphql_jwt.middleware.JSONWebTokenMiddleware"],
 }
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.1/ref/settings/#default-auto-field
@@ -158,7 +164,9 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 CORS_ALLOW_CREDENTIALS = True
 CORS_ALLOWED_ORIGINS = [
-    "http://localhost:3000",
+    "https://localhost:3000",
+    "https://127.0.0.1:3000",
+    "https://tauri.localhost",
     "http://tauri.localhost",
     "http://10.0.2.2:8000",
     "http://192.168.1.8:3000",

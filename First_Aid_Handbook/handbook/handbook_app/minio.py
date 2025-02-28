@@ -4,16 +4,16 @@ from django.core.files.uploadedfile import InMemoryUploadedFile
 def deleteImg(url):
     client = Minio(
             endpoint = '127.0.0.1:9000',
-            access_key = 'minio',
-            secret_key = 'minio124',
+            access_key = 'minioadmin',
+            secret_key = 'minioadmin',
             secure = False
         )
     if url == '':
         return 'success'
     try:
         url_parts = url.split('/')
-        bucket_name = url_parts[-3]
-        img_name = '/'.join(url_parts[-2:])
+        bucket_name = url_parts[3]
+        img_name = url_parts[4]
     except:
         return 'error'
 
@@ -26,15 +26,15 @@ def deleteImg(url):
 def addImg(img):
     client = Minio(
         endpoint = '127.0.0.1:9000',
-        access_key = 'minio',
-        secret_key = 'minio124',
+        access_key = 'minioadmin',
+        secret_key = 'minioadmin',
         secure = False
     )
 
     client.put_object(
-        'images',
-        f'helps/{img.name}',
+        'miniolab1',
+        f'{img.name}',
         img,
         img.size
     )
-    return f'http://127.0.0.1:9000/images/helps/{img.name}'
+    return f'http://127.0.0.1:9000/miniolab1/{img.name}'

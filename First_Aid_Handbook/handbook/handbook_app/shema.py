@@ -1,29 +1,43 @@
-class SectionType(DjangoObjectType):
+import graphene
+from graphene_django import DjangoObjectType
+
+from lab1_app.models import Component
+
+
+class ComponentType(DjangoObjectType):
     class Meta:
-        model = Section
-        fields = ('id', 'title', 'description', 'location', 'date', 'instructor', 'duration', 'imageUrl')
+        model = Component
+        fields = ('id', 'title', 'shortDescription', 'description', 'price', 'is_active', 'imgSrc')
 
 
 class Query(graphene.ObjectType):
-    section = graphene.Field(SectionType, id=graphene.Int(required=True))
+    component = graphene.Field(ComponentType, id=graphene.Int(required=True))
 
-    def resolve_section(self, info, id):
-        return Section.objects.get(pk=id)
+    def resolve_component(self, info, id):
+        return Component.objects.get(pk=id)
 
 
-class CreateSection(graphene.Mutation):
+class CreateComponent(graphene.Mutation):
     class Arguments:
         title = graphene.String(required=True)
+        price = graphene.Int(required=True)
+        short_description = graphene.String(required=False)
+        description = graphene.String(required=False)
 
-    section = graphene.Field(SectionType)
+    component = graphene.Field(ComponentType)
 
-    def mutate(self, info, title):
-        section = Section.objects.create(title=title)
-        section.save()
-        return CreateSection(section=section)
+    def mutate(self, info, title, price, short_description, description):
+        component = Component.objects.create(
+            title=title,
+            price=price,
+            shortDescription=short_description,
+            description=description
+        )
+        return CreateComponent(component=component)
+
 
 class Mutation(graphene.ObjectType):
-    create_section = CreateSection.Field()
+    create_component = CreateComponent.Field()
 
 
 schema = graphene.Schema(query=Query, mutation=Mutation)

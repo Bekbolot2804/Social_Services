@@ -3,13 +3,12 @@ import base64
 from io import BytesIO
 
 def generate_lesion_qr(lesion):
-    info = f"Распад №{lesion.lesion_id}\nПрошло времени: {lesion.pass_time}\n\n"
-    info += "Состав распада:\n"
+    info = f"Поражение №{lesion.lesion_id}\nТребуемое время: {lesion.sum_duration}\n\n"
+    info += "Состав поражения:\n"
     for helplesion in lesion.lesion_helps.all():
         help = helplesion.help
         info += f"{help.name}\n"
-        info += f"\tКоличество: {helplesion.quantity}\n"
-        info += f"\tОставшееся количество: {helplesion.remaining_quantity}\n"
+        info += f"\tКомментарий: {helplesion.comment}\n"
     qr = segno.make(info)
     buffer = BytesIO()
     qr.save(buffer, kind='png')
